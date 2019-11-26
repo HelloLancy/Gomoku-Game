@@ -57,6 +57,8 @@ int IsFall(char board[ROWS][COLS])
 void CommonMove(char board[ROWS][COLS],Point* point,char ch)
 {
     char scanpoint[POINTSTRSIZE+1];
+    char *errstr;
+    char *scanpointx;
 
     if(point == NULL)
     {
@@ -78,11 +80,22 @@ void CommonMove(char board[ROWS][COLS],Point* point,char ch)
             else
             {
                 printf("The coordinate input is incorrect. Please re-enter the coordinates: ");
-                fgets(scanpoint,POINTSTRSIZE,stdin);
-                char *pointx = strtok(scanpoint, ", \t");
-                char *pointy = strtok(NULL, ", \t");
-                x = atoi(pointx);
-                y = atoi(pointy);
+                input(scanpoint,POINTSTRSIZE);
+                if (strlen(scanpoint) == 0){
+                    input(scanpoint,6);
+                }
+                int i = 0;
+                int tmp;
+                scanpointx = scanpoint;
+                while(tmp =strtol(scanpointx, &scanpointx, 10)){
+                    if(i ==0){
+                        x = tmp;
+                    } else if (i==1){
+                        y = tmp;
+                        break;
+                    }
+                    i++;
+                }
                 /*scanf("%d%d",&x,&y);*/
                 x--;
                 y--;
@@ -90,11 +103,22 @@ void CommonMove(char board[ROWS][COLS],Point* point,char ch)
         }
         else{
             printf("The coordinate input is incorrect. Please re-enter the coordinates: ");
-            fgets(scanpoint,POINTSTRSIZE,stdin);
-            char *pointx = strtok(scanpoint, ", \t");
-            char *pointy = strtok(NULL, ", \t");
-            x = atoi(pointx);
-            y = atoi(pointy);
+            input(scanpoint,POINTSTRSIZE);
+            if (strlen(scanpoint) == 0){
+                input(scanpoint,6);
+            }
+            int i = 0;
+            int tmp;
+            scanpointx = scanpoint;
+            while(tmp =strtol(scanpointx, &scanpointx, 10)){
+                if(i ==0){
+                    x = tmp;
+                } else if (i==1){
+                    y = tmp;
+                    break;
+                }
+                i++;
+            }
             /*scanf("%d%d",&x,&y);*/
             x--;
             y--;
@@ -325,6 +349,17 @@ Determine whether the diagonal of the upper left and lower right of the current 
     return 'g';
 }
 
-
-
-
+/*Secure input file*/
+void input(char *string,int length)
+{
+    int x;
+    fgets(string,length,stdin);
+    for(x=0;x<=length;x++)
+    {
+        if( string[x] == '\n')
+        {
+            string[x] = '\0';
+            break;
+        }
+    }
+}

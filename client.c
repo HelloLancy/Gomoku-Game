@@ -20,6 +20,8 @@ void Game(int sock)
     Point point_server,point_client;
     char board[ROWS][COLS];
     char scanpoint[POINTSTRSIZE+1];
+    char* scanpointx;
+    char* scanpointy;
 
     InitBoard(board,ROWS,COLS);
     PrintBoard(board,ROWS,COLS);
@@ -27,11 +29,23 @@ void Game(int sock)
     int x,y;
     while(1){
         printf("请下子(Please enter coordinates：x,y)> ");
-        fgets(scanpoint,POINTSTRSIZE,stdin);
-        char *pointx = strtok(scanpoint, ", \t");
-        char *pointy = strtok(NULL, ", \t");
-        x = atoi(pointx);
-        y = atoi(pointy);
+        scanpoint[strlen(scanpoint)-1] = '\0';
+        input(scanpoint,6);
+        if (strlen(scanpoint) == 0){
+            input(scanpoint,6);
+        }
+        int i = 0;
+        int tmp;
+        scanpointx = scanpoint;
+        while(tmp =strtol(scanpointx, &scanpointx, 10)){
+            if(i ==0){
+                x = tmp;
+            } else if (i==1){
+                y = tmp;
+                break;
+            }
+            i++;
+        }
         /*scanf("%d%d",&x,&y);*/
 
         point_client.row = x-1;
@@ -72,6 +86,7 @@ void Game(int sock)
 
 int main(int argc, char* argv[])
 {
+    char *errstr;
     if(argc != 3)
     {
         printf("Usage: ./server [ip] [port]\n");
@@ -88,7 +103,7 @@ int main(int argc, char* argv[])
     struct sockaddr_in client;
     client.sin_family = AF_INET;
     client.sin_addr.s_addr = inet_addr(argv[1]);
-    client.sin_port = htons(atoi(argv[2]));
+    client.sin_port = htons(strtol(argv[2],&errstr,10));
     int ret = connect(sock,(const struct sockaddr*)&client,sizeof(client));
     if(ret < 0)
     {
@@ -101,8 +116,9 @@ int main(int argc, char* argv[])
     while(1)
     {
         printf("Please make your choice> ");
-        fgets(scanstate,2,stdin);
-        state = atoi(scanstate);
+        input(scanstate,2);
+        state = strtol(scanstate,&errstr,10);
+        scanstate[strlen(scanstate)-1]='\0';
         /*scanf("%d",&state);*/
         if(state == 1)
         {

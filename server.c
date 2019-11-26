@@ -78,11 +78,19 @@ int main(int argc, char* argv[])
                 break;
             }
             printf("请下子(Please enter coordinates：x,y)> ");
-            fgets(point,POINTSTRSIZE,stdin);
-            char *pointx = strtok(point, ", \t");
-            char *pointy = strtok(NULL, ", \t");
-            x = atoi(pointx);
-            y = atoi(pointy);
+            input(point,POINTSTRSIZE);
+            int i = 0;
+            int tmp;
+            char* scanpointx = point;
+            while(tmp =strtol(scanpointx, &scanpointx, 10)){
+                if(i ==0){
+                    x = tmp;
+                } else if (i==1){
+                    y = tmp;
+                    break;
+                }
+                i++;
+            }
             /*scanf("%d%d",&x,&y);*/
             point_server.row = x-1;
             point_server.col = y-1;
