@@ -5,6 +5,9 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <string.h>
+
+#define POINTSTRSIZE 5
 
 void Menu()
 {
@@ -16,13 +19,21 @@ void Game(int sock)
 {
     Point point_server,point_client;
     char board[ROWS][COLS];
+    char scanpoint[POINTSTRSIZE+1];
+
     InitBoard(board,ROWS,COLS);
     PrintBoard(board,ROWS,COLS);
     ssize_t s;
     int x,y;
     while(1){
         printf("请下子(Please enter coordinates：x,y)> ");
-        scanf("%d%d",&x,&y);
+        fgets(scanpoint,POINTSTRSIZE,stdin);
+        char *pointx = strtok(scanpoint, ", \t");
+        char *pointy = strtok(NULL, ", \t");
+        x = atoi(pointx);
+        y = atoi(pointy);
+        /*scanf("%d%d",&x,&y);*/
+
         point_client.row = x-1;
         point_client.col = y-1;
         ClientMove(board,&point_client);
@@ -86,10 +97,13 @@ int main(int argc, char* argv[])
     }
     Menu();
     int state;
+    char scanstate[2];
     while(1)
     {
         printf("Please make your choice> ");
-        scanf("%d",&state);
+        fgets(scanstate,2,stdin);
+        state = atoi(scanstate);
+        /*scanf("%d",&state);*/
         if(state == 1)
         {
             Game(sock);
