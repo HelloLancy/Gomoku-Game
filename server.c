@@ -5,9 +5,14 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <string.h>
+
+#define POINTSTRSIZE 5
 
 int main(int argc, char* argv[])
 {
+    char point[POINTSTRSIZE+1];
+
     if(argc != 3)
     {
         printf("Usage: ./server [ip] [port]\n");
@@ -73,7 +78,12 @@ int main(int argc, char* argv[])
                 break;
             }
             printf("请下子(Please enter coordinates：x,y)> ");
-            scanf("%d%d",&x,&y);
+            fgets(point,POINTSTRSIZE,stdin);
+            char *pointx = strtok(point, ", \t");
+            char *pointy = strtok(NULL, ", \t");
+            x = atoi(pointx);
+            y = atoi(pointy);
+            /*scanf("%d%d",&x,&y);*/
             point_server.row = x-1;
             point_server.col = y-1;
             ServerMove(board,&point_server);
@@ -90,7 +100,7 @@ int main(int argc, char* argv[])
                 break;
             }
 
-        }//game over
+        }/*game over*/
     }
     close(sock);
     return 0;
