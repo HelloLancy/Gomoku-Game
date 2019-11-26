@@ -4,6 +4,9 @@
 #include <sys/types.h>  
 #include <netinet/in.h>
 #include <unistd.h>
+#include <string.h>
+
+#define POINTSTRSIZE 5
 
 /*Initialize the board*/
 void InitBoard(char board[ROWS][COLS],int row, int col)
@@ -53,6 +56,8 @@ int IsFall(char board[ROWS][COLS])
 /*Move*/
 void CommonMove(char board[ROWS][COLS],Point* point,char ch)
 {
+    char scanpoint[POINTSTRSIZE+1];
+
     if(point == NULL)
     {
         return;
@@ -73,14 +78,24 @@ void CommonMove(char board[ROWS][COLS],Point* point,char ch)
             else
             {
                 printf("The coordinate input is incorrect. Please re-enter the coordinates: ");
-                scanf("%d%d",&x,&y);
+                fgets(scanpoint,POINTSTRSIZE,stdin);
+                char *pointx = strtok(scanpoint, ", \t");
+                char *pointy = strtok(NULL, ", \t");
+                x = atoi(pointx);
+                y = atoi(pointy);
+                /*scanf("%d%d",&x,&y);*/
                 x--;
                 y--;
             }
         }
         else{
             printf("The coordinate input is incorrect. Please re-enter the coordinates: ");
-            scanf("%d%d",&x,&y);
+            fgets(scanpoint,POINTSTRSIZE,stdin);
+            char *pointx = strtok(scanpoint, ", \t");
+            char *pointy = strtok(NULL, ", \t");
+            x = atoi(pointx);
+            y = atoi(pointy);
+            /*scanf("%d%d",&x,&y);*/
             x--;
             y--;
         }
