@@ -1,6 +1,6 @@
 # Gomoku-Game
 This is successful running between server and client
-C-based client and server applications responsible for running a multiplayer online word guessing game. Implemented using sockets.
+C-based client and server applications responsible for running a multiplayer online Gomoku game. Implemented using sockets.
 
 
 for server Makefile
