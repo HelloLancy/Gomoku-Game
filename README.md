@@ -27,6 +27,6 @@ clean:
 
 For gcc the ssl_server.c and ssl_client.c we should use command on blow 
 
-```gcc -Wall ssl_client.c -o client -L/usr/lib -lssl -lcrypto```
+```gcc -Wall ssl_client.c game.c -o client -L/usr/lib -lssl -lcrypto```
 
-```gcc -Wall ssl_server.c -o server -L/usr/lib -lssl -lcrypto```
+```gcc -Wall ssl_server.c game.c -o server -L/usr/lib -lssl -lcrypto```
