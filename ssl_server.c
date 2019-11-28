@@ -1,3 +1,4 @@
+#include "game.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
@@ -11,6 +12,7 @@
 #include <openssl/ssl.h>
 #include <openssl/err.h>
  
+#define POINTSTRSIZE 5
 #define MAXBUF 1024
 /************关于本文档********************************************
 *filename: ssl-server.c
@@ -18,6 +20,7 @@
 *********************************************************************/
 int main(int argc, char **argv)
 {
+    char point[POINTSTRSIZE+1];
     int sockfd, new_fd;
     socklen_t len;
     struct sockaddr_in my_addr, their_addr;
@@ -143,6 +146,67 @@ int main(int argc, char **argv)
                 ("消息接收失败！错误代码是%d，错误信息是'%s'\n",
                  errno, strerror(errno));
         /* 处理每个新连接上的数据收发结束 */
+
+        for(;;)
+        {
+            ssize_t s;
+            Point point_server,point_client;
+            char board[ROWS][COLS];
+            InitBoard(board,ROWS,COLS);
+            int x,y;
+            while(1){
+                s = SSL_read(ssl,(void*)&point_client,sizeof(point_client));
+                if(s == 0)
+                {
+                    printf("Client quit...\n");
+                    close(sockfd);
+                }
+                ClientMove(board,&point_client);
+                PrintBoard(board,ROWS,COLS);
+                if(GameState(board,&point_client) == 'X')
+                {
+                    printf("Client win!\n");
+                    break;
+                }
+                else if(GameState(board,&point_client) == 'p')
+                {
+                    printf("Draw!\n");
+                    break;
+                }
+                printf("请下子(Please enter coordinates：x,y)> ");
+                input(point,POINTSTRSIZE);
+                int i = 0;
+                int tmp;
+                char* scanpointx = point;
+                while(tmp =strtol(scanpointx, &scanpointx, 10)){
+                    if(i ==0){
+                        x = tmp;
+                    } else if (i==1){
+                        y = tmp;
+                        break;
+                    }
+                    i++;
+                }
+                /*scanf("%d%d",&x,&y);*/
+                point_server.row = x-1;
+                point_server.col = y-1;
+                ServerMove(board,&point_server);
+                PrintBoard(board,ROWS,COLS);
+                len = write(ssl,(void*)&point_server,sizeof(point_server));
+                if(GameState(board,&point_client) == 'O')
+                {
+                    printf("You win!\n");
+                    break;
+                }
+                else if(GameState(board,&point_client) == 'p')
+                {
+                    printf("Draw!\n");
+                    break;
+                }
+
+            }/*game over*/
+        }
+ 
       finish:
         /* 关闭 SSL 连接 */
         SSL_shutdown(ssl);
@@ -151,7 +215,8 @@ int main(int argc, char **argv)
         /* 关闭 socket */
         close(new_fd);
     }
- 
+
+    
     /* 关闭监听的 socket */
     close(sockfd);
     /* 释放 CTX */
