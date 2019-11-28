@@ -10,7 +10,8 @@ server: game.c server.c
 	gcc -o $@ -g $^
 .PHONY:clean
 clean:
-	rm -f server ```
+	rm -f server
+```
 
 For client
 
@@ -20,4 +21,5 @@ client: game.c client.c
 	gcc -o $@ -g $^
 .PHONY:clean
 clean:
-	rm -f client```
+	rm -f client
+```
