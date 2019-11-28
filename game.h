@@ -34,5 +34,4 @@ void ServerMove(char board[ROWS][COLS],Point* point);
 /*Judging win or lose*/
 char GameState(char board[ROWS][COLS],Point* point);
 
-/*Secure input file*/
-void input(char* string,int length);
+
