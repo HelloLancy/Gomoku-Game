@@ -4,20 +4,20 @@ C-based client and server applications responsible for running a multiplayer onl
 
 
 for server Makefile
-.PHONY:all
+```.PHONY:all
 all:server 
 server: game.c server.c 
 	gcc -o $@ -g $^
 .PHONY:clean
 clean:
-	rm -f server 
+	rm -f server ```
 
 For client
 
-.PHONY:all
+```.PHONY:all
 all:client
 client: game.c client.c
 	gcc -o $@ -g $^
 .PHONY:clean
 clean:
-	rm -f client
+	rm -f client```
